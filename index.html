@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manhwa Free Translator</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.3/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('https://example.com/manhwa-background.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+    </style>
+    <meta name="description" content="Manhwa Free Translator helps you translate raw Manhwa images from Korean, Spanish, and Japanese to English easily. Read your favorite Manhwa in English.">
+    <meta name="keywords" content="Manhwa, translate Manhwa, Korean to English, Spanish to English, Japanese to English, read Manhwa, raw Manhwa translation">
+</head>
+<body class="bg-opacity-80">
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+            <h1 class="text-3xl font-bold mb-4">Manhwa Free Translator</h1>
+            <p class="mb-4 text-gray-700">Upload your images and translate Manhwa from Korean, Spanish, and Japanese to English.</p>
+            <input type="file" id="imageInput" accept="image/*" multiple class="mb-4 block mx-auto" />
+            <button onclick="translateImages()" class="text-white bg-blue-500 px-4 py-2 rounded">Translate</button>
+            <div id="results" class="mt-6">
+                <!-- Translated images will be displayed here -->
+            </div>
+        </div>
+    </div>
+    <script>
+        const maxUploadsPerWeek = 120;
+        const maxImagesPerUpload = 20;
+
+        function checkUploadLimit() {
+            const lastReset = localStorage.getItem('lastReset');
+            const now = new Date().getTime();
+            if (!lastReset || now - lastReset > 7 * 24 * 60 * 60 * 1000) {
+                localStorage.setItem('uploadCount', 0);
+                localStorage.setItem('lastReset', now);
+                return 0;
+            }
+            return parseInt(localStorage.getItem('uploadCount') || 0);
+        }
+
+        function updateUploadCount(newUploads) {
+            let uploadCount = checkUploadLimit();
+            uploadCount += newUploads;
+            localStorage.setItem('uploadCount', uploadCount);
+        }
+
+        function translateImages() {
+            const fileInput = document.getElementById('imageInput');
+            const files = fileInput.files;
+            if (files.length > maxImagesPerUpload) {
+                alert(`You can only upload up to ${maxImagesPerUpload} images at a time.`);
+                return;
+            }
+
+            const currentUploadCount = checkUploadLimit();
+            if (currentUploadCount + files.length > maxUploadsPerWeek) {
+                alert(`You have reached your weekly upload limit of ${maxUploadsPerWeek} images.`);
+                return;
+            }
+
+            updateUploadCount(files.length);
+
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+
+            for (const file of files) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    // Simulate translation process
+                    const translatedHTML = `<p>Fake translation of: ${file.name}</p>`; // Replace with real translated text
+                    resultsDiv.innerHTML += `<div class="mt-4">${translatedHTML}</div>`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>
